@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock, Paper, Scissors Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .rainbow-animation {
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            color: #333;
+        }
+        .choice-icon {
+            font-size: 4rem;
+            padding: 2rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            color: white !important; /* Force white color for emojis */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen flex items-center justify-center">
+    <div class="max-w-4xl w-full mx-auto bg-white/90 backdrop-blur-md rounded-xl shadow-2xl p-12 relative">
+        <h1 class="text-6xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-12 pulse-animation rainbow-animation">Rock, Paper, Scissors</h1>
+        
+        
+        <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-8 mb-12 flex justify-around items-center shadow-inner">
+            <div class="text-4xl rainbow-animation">
+                <span class="font-bold">Player:</span>
+                <span id="player-score" class="font-bold text-5xl">0</span>
+            </div>
+            <div class="text-4xl rainbow-animation">
+                <span class="font-bold">Computer:</span>
+                <span id="computer-score" class="font-bold text-5xl">0</span>
+            </div>
+        </div>
+
+        <div class="flex justify-center gap-12 mb-12">
+            <button onclick="play('rock')" class="choice-icon bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold rounded-full shadow-lg hover:shadow-blue-500/50 transform hover:scale-110 transition duration-300 float-animation rainbow-animation" style="animation-delay: 0s;">
+                🪨
+            </button>
+            <button onclick="play('paper')" class="choice-icon bg-gradient-to-r from-green-500 to-green-600 text-white font-bold rounded-full shadow-lg hover:shadow-green-500/50 transform hover:scale-110 transition duration-300 float-animation rainbow-animation" style="animation-delay: 0.2s;">
+                📄
+            </button>
+            <button onclick="play('scissors')" class="choice-icon bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold rounded-full shadow-lg hover:shadow-purple-500/50 transform hover:scale-110 transition duration-300 float-animation rainbow-animation" style="animation-delay: 0.4s;">
+                ✂️
+            </button>
+        </div>
+
+        <div id="result" class="text-center text-3xl font-bold text-gray-700 p-8 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg shadow-inner rainbow-animation"></div>
+        
+        <div class="absolute bottom-4 left-4 text-sm text-gray-600">
+            Designed by Rafi
+        </div>
+    </div>
+
+    <script>
+        let playerScore = 0;
+        let computerScore = 0;
+
+        function getComputerChoice() {
+            const choices = ['rock', 'paper', 'scissors'];
+            return choices[Math.floor(Math.random() * choices.length)];
+        }
+
+        function determineWinner(playerChoice, computerChoice) {
+            if (playerChoice === computerChoice) return 'tie';
+            
+            if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                return 'player';
+            }
+            
+            return 'computer';
+        }
+
+        function updateScore(winner) {
+            if (winner === 'player') playerScore++;
+            if (winner === 'computer') computerScore++;
+            
+            document.getElementById('player-score').textContent = playerScore;
+            document.getElementById('computer-score').textContent = computerScore;
+        }
+
+        function play(playerChoice) {
+            const computerChoice = getComputerChoice();
+            const winner = determineWinner(playerChoice, computerChoice);
+            
+            let resultMessage = `You chose ${playerChoice}, Computer chose ${computerChoice}. `;
+            
+            if (winner === 'tie') {
+                resultMessage += "It's a tie! 🤝";
+            } else if (winner === 'player') {
+                resultMessage += "You win! 🎉";
+            } else {
+                resultMessage += "Computer wins! 💻";
+            }
+            
+            const resultElement = document.getElementById('result');
+            resultElement.textContent = resultMessage;
+            resultElement.classList.add('pulse-animation');
+            setTimeout(() => resultElement.classList.remove('pulse-animation'), 2000);
+            updateScore(winner);
+        }
+    </script>
+</body>
+</html>
